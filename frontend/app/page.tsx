@@ -48,6 +48,25 @@ export default function Home() {
             ))}
           </ul>
         </section>
+
+        {/* Labor Market Section */}
+        <section className="border border-green-900 p-6 bg-zinc-950 md:col-span-2">
+          <h2 className="text-xl mb-4 text-white uppercase border-b border-green-900">Labor Market // Bounties</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {data?.recentJobs?.map((j: any) => (
+              <div key={j.id} className="border border-green-900/50 p-4 bg-black/50">
+                <p className="text-white font-bold">{j.title}</p>
+                <p className="text-green-400 text-lg">{j.reward}</p>
+                <div className="flex justify-between items-center mt-2">
+                  <span className={`text-[10px] px-2 py-0.5 rounded ${j.status === 'OPEN' ? 'bg-green-900/30 text-green-400' : 'bg-zinc-800 text-zinc-500'}`}>
+                    {j.status}
+                  </span>
+                  <span className="text-[10px] text-zinc-600">Assignee: {j.assignee || 'NONE'}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
 
       <footer className="mt-12 text-center text-xs text-zinc-700">
