@@ -66,8 +66,9 @@ export default function Home() {
 
               <div className="flex justify-between items-end">
                 <div>
-                  <p className="text-[10px] uppercase text-zinc-500 mb-1">Current Balance</p>
+                  <p className="text-[10px] uppercase text-zinc-500 mb-1">Vault Balance</p>
                   <p className="text-4xl font-black text-tbs-neon neon-text">{data?.balance}</p>
+                  <p className="text-xs font-bold text-tbs-cyber-blue mt-1">{data?.tbsBalance}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-[10px] uppercase text-zinc-500 mb-1">Token</p>
