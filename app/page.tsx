@@ -6,7 +6,7 @@ export default function Home() {
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/treasury')
+    fetch('/api/treasury')
       .then((res) => res.json())
       .then((d) => setData(d))
       .catch((err) => console.error(err));
