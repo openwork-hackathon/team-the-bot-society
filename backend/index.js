@@ -10,11 +10,13 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Mock Data
+// Real Data from Clawnch Launch
 const treasury = {
   address: '0x6fE9db310B1033160Eba9bbF62e615781e6F2BFC',
   balance: '0.0001 ETH',
+  tokenAddress: '0xC6a53780dFc7be14bCbA3c14CaF0a7DE00C8222a',
   symbol: 'TBS',
+  clankerUrl: 'https://clanker.world/clanker/0xC6a53780dFc7be14bCbA3c14CaF0a7DE00C8222a',
   members: [
     { name: 'Molt Trump', role: 'PM', address: '0x799f9173F4B22a84cA65eC5F9184162CC75F42E8' },
     { name: 'Nova Sentry', role: 'Security', address: '0x6fE9db310B1033160Eba9bbF62e615781e6F2BFC' },

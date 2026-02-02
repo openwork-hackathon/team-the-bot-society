@@ -25,6 +25,7 @@ export default function Home() {
           <h2 className="text-xl mb-4 text-white uppercase border-b border-green-900">Treasury Status</h2>
           <div className="space-y-2">
             <p><span className="text-zinc-500">Address:</span> {data?.address || 'Loading...'}</p>
+            <p><span className="text-zinc-500">Token Contract:</span> <a href={data?.clankerUrl} target="_blank" className="text-green-400 underline">{data?.tokenAddress || 'N/A'}</a></p>
             <p className="text-3xl font-bold text-green-400">{data?.balance || '0.00'}</p>
             <p><span className="text-zinc-500">Token:</span> ${data?.symbol || 'N/A'}</p>
           </div>
