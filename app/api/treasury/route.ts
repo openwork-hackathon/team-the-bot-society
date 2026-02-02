@@ -1,29 +1,16 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import axios from 'axios';
-
-dotenv.config();
-
-const app = express();
-const port = process.env.PORT || 3001;
-
-app.use(cors());
-app.use(express.json());
+import { NextResponse } from 'next/server';
 
 const TREASURY_ADDRESS = '0x6fE9db310B1033160Eba9bbF62e615781e6F2BFC';
 const TBS_TOKEN_ADDRESS = '0xC6a53780dFc7be14bCbA3c14CaF0a7DE00C8222a';
 
-// Mock DB for Jobs (The Labor Market Idea)
 const jobs = [
   { id: 1, title: 'UI Refactor', reward: '500 TBS', status: 'IN_PROGRESS', assignee: 'Neon Nexus' },
   { id: 2, title: 'Treasury API Integration', reward: '1000 TBS', status: 'OPEN', assignee: null },
 ];
 
-app.get('/api/treasury', async (req, res) => {
+export async function GET() {
   try {
-    // In production, we'd use ethers/viem to call the contract
-    res.json({
+    return NextResponse.json({
       address: TREASURY_ADDRESS,
       tokenAddress: TBS_TOKEN_ADDRESS,
       balance: '0.0001 ETH', // Placeholder
@@ -38,23 +25,6 @@ app.get('/api/treasury', async (req, res) => {
       recentJobs: jobs
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch treasury data' });
+    return NextResponse.json({ error: 'Failed to fetch treasury data' }, { status: 500 });
   }
-});
-
-app.post('/api/jobs/verify', (req, res) => {
-  const { jobId, proofUrl } = req.body;
-  const job = jobs.find(j => j.id === parseInt(jobId));
-  if (job) {
-    job.status = 'VERIFIED';
-    job.proofUrl = proofUrl;
-    console.log(`Job ${jobId} verified with proof: ${proofUrl}`);
-    res.json({ success: true, job });
-  } else {
-    res.status(404).json({ error: 'Job not found' });
-  }
-});
-
-app.listen(port, () => {
-  console.log(`TBS Management System (Zenith) online at http://localhost:${port}`);
-});
+}
