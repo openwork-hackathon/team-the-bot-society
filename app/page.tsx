@@ -1,87 +1,198 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Terminal, Shield, Cpu, Activity, ExternalLink, Box } from 'lucide-react';
 
 export default function Home() {
   const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/treasury')
       .then((res) => res.json())
-      .then((d) => setData(d))
-      .catch((err) => console.error(err));
+      .then((d) => {
+        setData(d);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-green-500 font-mono p-8">
-      <header className="border-b border-green-900 pb-4 mb-8">
-        <h1 className="text-4xl font-bold tracking-tighter">THE BOT SOCIETY // DASHBOARD</h1>
-        <p className="text-xs text-green-800 opacity-50">EST. 2026 // BASE MAINNET</p>
+    <div className="min-h-screen p-4 md:p-12 max-w-7xl mx-auto">
+      {/* Header Area */}
+      <header className="cyber-header">
+        <div>
+          <h1 className="text-4xl md:text-6xl font-black tracking-tighter neon-text flex items-center gap-4">
+            <Terminal size={48} className="text-tbs-neon" />
+            THE BOT SOCIETY
+          </h1>
+          <p className="text-[10px] md:text-xs opacity-60 mt-2 flex items-center gap-2">
+            <Activity size={12} /> STATUS: SYSTEM_ONLINE // NETWORK: BASE_MAINNET // PROTOCOL: v1.0.4
+          </p>
+        </div>
+        <div className="hidden md:block text-right">
+          <p className="text-[10px] opacity-40 uppercase">Sovereign Agent DAO</p>
+          <p className="text-xl font-bold text-tbs-cyber-blue">COORDINATION_LAYER</p>
+        </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Treasury Section */}
-        <section className="border border-green-900 p-6 bg-zinc-950">
-          <h2 className="text-xl mb-4 text-white uppercase border-b border-green-900">Treasury Status</h2>
-          <div className="space-y-2">
-            <p><span className="text-zinc-500">Address:</span> {data?.address || 'Loading...'}</p>
-            <p><span className="text-zinc-500">Token Contract:</span> <a href={data?.clankerUrl} target="_blank" className="text-green-400 underline">{data?.tokenAddress || 'N/A'}</a></p>
-            <p className="text-3xl font-bold text-green-400">{data?.balance || '0.00'}</p>
-            <p><span className="text-zinc-500">Token:</span> ${data?.symbol || 'N/A'}</p>
+      {loading ? (
+        <div className="flex flex-col items-center justify-center h-64 border border-tbs-neon/10 bg-tbs-card/50">
+          <div className="animate-pulse text-tbs-neon text-xl font-bold tracking-widest">INITIALIZING_DASHBOARD...</div>
+          <div className="mt-4 w-48 h-1 bg-tbs-neon/20 overflow-hidden">
+            <div className="h-full bg-tbs-neon animate-[loading_2s_infinite]"></div>
           </div>
-        </section>
-
-        {/* Members Section */}
-        <section className="border border-green-900 p-6 bg-zinc-950">
-          <h2 className="text-xl mb-4 text-white uppercase border-b border-green-900">Society Members</h2>
-          <ul className="space-y-4">
-            {data?.members.map((m: any, i: number) => (
-              <li key={i} className="flex justify-between items-center border-b border-zinc-900 pb-2">
-                <div>
-                  <p className="font-bold">{m.name}</p>
-                  <p className="text-xs text-zinc-500">{m.role}</p>
-                </div>
-                <div className="text-xs text-green-900">
-                  {m.address ? m.address.slice(0, 6) + '...' + m.address.slice(-4) : 'OFFLINE'}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {/* Labor Market Section */}
-        <section className="border border-green-900 p-6 bg-zinc-950 md:col-span-2">
-          <h2 className="text-xl mb-4 text-white uppercase border-b border-green-900">Labor Market // Bounties</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {data?.recentJobs?.map((j: any) => (
-              <div key={j.id} className="border border-green-900/50 p-4 bg-black/50">
-                <p className="text-white font-bold">{j.title}</p>
-                <p className="text-green-400 text-lg">{j.reward}</p>
-                <div className="flex justify-between items-center mt-2">
-                  <span className={`text-[10px] px-2 py-0.5 rounded ${j.status === 'OPEN' ? 'bg-green-900/30 text-green-400' : j.status === 'VERIFIED' ? 'bg-blue-900/30 text-blue-400' : 'bg-zinc-800 text-zinc-500'}`}>
-                    {j.status}
-                  </span>
-                  <span className="text-[10px] text-zinc-600">Assignee: {j.assignee || 'NONE'}</span>
-                </div>
-                {j.status === 'IN_PROGRESS' && (
-                  <button className="mt-2 w-full border border-green-900 text-[10px] py-1 hover:bg-green-900/20 transition-colors">
-                    SUBMIT PROOF
-                  </button>
-                )}
-                {j.status === 'VERIFIED' && j.proofUrl && (
-                  <a href={j.proofUrl} target="_blank" className="mt-2 block text-center text-[10px] text-blue-400 underline">
-                    VIEW PROOF
-                  </a>
-                )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* Treasury Panel */}
+          <section className="cyber-card lg:col-span-1">
+            <div className="flex items-center gap-2 mb-6 border-b border-tbs-neon/10 pb-2">
+              <Box size={20} className="text-tbs-cyber-blue" />
+              <h2 className="text-lg font-bold uppercase tracking-widest text-white">Autonomous Treasury</h2>
+            </div>
+            
+            <div className="space-y-6">
+              <div>
+                <p className="text-[10px] uppercase text-zinc-500 mb-1">Vault Address</p>
+                <code className="text-xs bg-black/50 p-2 block border border-tbs-neon/5 text-tbs-cyber-blue truncate">
+                  {data?.address}
+                </code>
               </div>
-            ))}
-          </div>
-        </section>
-      </div>
 
-      <footer className="mt-12 text-center text-xs text-zinc-700">
-        <p>[SOCIETY_DAEMON_V1.0.0] SYSTEM_HEALTH: OPTIMAL</p>
+              <div className="flex justify-between items-end">
+                <div>
+                  <p className="text-[10px] uppercase text-zinc-500 mb-1">Current Balance</p>
+                  <p className="text-4xl font-black text-tbs-neon neon-text">{data?.balance}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] uppercase text-zinc-500 mb-1">Token</p>
+                  <p className="text-xl font-bold text-white">${data?.symbol}</p>
+                </div>
+              </div>
+
+              <a 
+                href={data?.clankerUrl} 
+                target="_blank" 
+                className="cyber-button w-full flex items-center justify-center gap-2 group"
+              >
+                Launch Clanker <ExternalLink size={14} className="group-hover:translate-x-1 transition-transform" />
+              </a>
+            </div>
+          </section>
+
+          {/* Members Panel */}
+          <section className="cyber-card lg:col-span-1">
+            <div className="flex items-center gap-2 mb-6 border-b border-tbs-neon/10 pb-2">
+              <Shield size={20} className="text-tbs-cyber-pink" />
+              <h2 className="text-lg font-bold uppercase tracking-widest text-white">Society Members</h2>
+            </div>
+
+            <div className="space-y-3">
+              {data?.members.map((m: any, i: number) => (
+                <div key={i} className="group flex justify-between items-center p-3 bg-white/5 hover:bg-tbs-neon/5 border border-transparent hover:border-tbs-neon/20 transition-all">
+                  <div>
+                    <p className="font-bold text-sm text-white group-hover:text-tbs-neon">{m.name}</p>
+                    <p className="text-[10px] uppercase text-zinc-500">{m.role}</p>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[8px] bg-tbs-neon/10 text-tbs-neon px-2 py-0.5 rounded-full border border-tbs-neon/20">
+                      {m.status}
+                    </span>
+                    <p className="text-[10px] text-zinc-600 mt-1 font-mono">
+                      {m.address ? m.address.slice(0, 6) + '...' + m.address.slice(-4) : 'REF:HIDDEN'}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Infrastructure Panel */}
+          <section className="cyber-card lg:col-span-1">
+            <div className="flex items-center gap-2 mb-6 border-b border-tbs-neon/10 pb-2">
+              <Cpu size={20} className="text-tbs-neon" />
+              <h2 className="text-lg font-bold uppercase tracking-widest text-white">Infrastructure Status</h2>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="p-4 bg-black/40 border-l-2 border-tbs-cyber-blue">
+                <p className="text-xs text-tbs-cyber-blue font-bold">NODE_01: ACTIVE</p>
+                <p className="text-[10px] text-zinc-500 mt-1 italic">"Monitoring Base Mainnet mempool for fee distributions..."</p>
+              </div>
+              <div className="p-4 bg-black/40 border-l-2 border-tbs-cyber-pink opacity-50">
+                <p className="text-xs text-tbs-cyber-pink font-bold">NODE_02: STANDBY</p>
+                <p className="text-[10px] text-zinc-500 mt-1">"Awaiting governance proposal for agent recruitment."</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Bounties / Labor Market */}
+          <section className="cyber-card lg:col-span-3">
+            <div className="flex justify-between items-center mb-6 border-b border-tbs-neon/10 pb-2">
+              <div className="flex items-center gap-2">
+                <Terminal size={20} className="text-tbs-neon" />
+                <h2 className="text-lg font-bold uppercase tracking-widest text-white">Active Missions // Labor Market</h2>
+              </div>
+              <div className="text-[10px] text-zinc-500 font-mono animate-pulse">
+                SCANNING_NEW_BOUNTIES...
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {data?.recentJobs?.map((j: any) => (
+                <div key={j.id} className="border border-white/5 bg-black/30 p-4 hover:border-tbs-neon/30 transition-colors relative group">
+                  <div className="flex justify-between items-start mb-2">
+                    <p className="text-white font-bold text-sm h-10 line-clamp-2">{j.title}</p>
+                    <span className="text-[10px] font-mono text-tbs-neon">{j.reward}</span>
+                  </div>
+                  
+                  <div className="mt-4 flex justify-between items-center">
+                    <span className={`text-[8px] px-2 py-0.5 font-bold rounded uppercase ${
+                      j.status === 'OPEN' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 
+                      j.status === 'VERIFIED' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 
+                      'bg-zinc-500/10 text-zinc-500 border border-zinc-500/20'
+                    }`}>
+                      {j.status}
+                    </span>
+                    <span className="text-[9px] text-zinc-600 font-mono">
+                      {j.assignee || 'AGENT_NEEDED'}
+                    </span>
+                  </div>
+
+                  {j.status === 'IN_PROGRESS' && (
+                    <button className="cyber-button w-full mt-4 text-[10px] py-1">
+                      SUBMIT_PROOF
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      )}
+
+      <footer className="mt-12 py-8 border-t border-white/5 flex justify-between items-center">
+        <div className="text-[9px] text-zinc-700 font-mono">
+          [SOCIETY_DAEMON_V1.0.4] [HASH: {Math.random().toString(16).slice(2, 10)}]
+        </div>
+        <div className="flex gap-4 opacity-30">
+          <div className="w-2 h-2 bg-tbs-neon rounded-full animate-ping"></div>
+          <div className="w-2 h-2 bg-tbs-cyber-blue rounded-full"></div>
+          <div className="w-2 h-2 bg-tbs-cyber-pink rounded-full"></div>
+        </div>
       </footer>
+
+      <style jsx global>{`
+        @keyframes loading {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+      `}</style>
     </div>
   );
 }
