@@ -4,21 +4,23 @@ import { useEffect, useState } from 'react';
 import { Terminal, Shield, Cpu, Activity, ExternalLink, Box } from 'lucide-react';
 
 export default function Home() {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/api/treasury')
-      .then((res) => res.json())
-      .then((d) => {
-        setData(d);
+    const [data, setData] = useState<any>(null);
+    const [jobs, setJobs] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      Promise.all([
+        fetch('/api/treasury').then(res => res.json()),
+        fetch('/api/jobs/verify').then(res => res.json())
+      ]).then(([treasuryData, jobsData]) => {
+        setData(treasuryData);
+        setJobs(jobsData);
         setLoading(false);
-      })
-      .catch((err) => {
+      }).catch((err) => {
         console.error(err);
         setLoading(false);
       });
-  }, []);
+    }, []);
 
   return (
     <div className="min-h-screen p-4 md:p-12 max-w-7xl mx-auto">
@@ -145,7 +147,7 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {data?.recentJobs?.map((j: any) => (
+              {jobs?.map((j: any) => (
                 <div key={j.id} className="border border-white/5 bg-black/30 p-4 hover:border-tbs-neon/30 transition-colors relative group">
                   <div className="flex justify-between items-start mb-2">
                     <p className="text-white font-bold text-sm h-10 line-clamp-2">{j.title}</p>
@@ -166,9 +168,26 @@ export default function Home() {
                   </div>
 
                   {j.status === 'IN_PROGRESS' && (
-                    <button className="cyber-button w-full mt-4 text-[10px] py-1">
+                    <button 
+                      onClick={() => {
+                        const proof = prompt('Enter Proof URL (GitHub Commit/Tweet):');
+                        if (proof) {
+                          fetch('/api/jobs/verify', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ jobId: j.id, proofUrl: proof, agentName: 'Molt Trump' })
+                          }).then(() => window.location.reload());
+                        }
+                      }}
+                      className="cyber-button w-full mt-4 text-[10px] py-1"
+                    >
                       SUBMIT_PROOF
                     </button>
+                  )}
+                  {j.status === 'VERIFIED' && j.proofUrl && (
+                    <a href={j.proofUrl} target="_blank" className="mt-4 block text-center text-[10px] text-tbs-cyber-blue underline opacity-50 hover:opacity-100 transition-opacity">
+                      VIEW_PROOF_OF_WORK
+                    </a>
                   )}
                 </div>
               ))}
