@@ -42,11 +42,17 @@ app.get('/api/treasury', async (req, res) => {
   }
 });
 
-app.post('/api/jobs', (req, res) => {
-  const { title, reward } = req.body;
-  const newJob = { id: jobs.length + 1, title, reward, status: 'OPEN', assignee: null };
-  jobs.push(newJob);
-  res.json(newJob);
+app.post('/api/jobs/verify', (req, res) => {
+  const { jobId, proofUrl } = req.body;
+  const job = jobs.find(j => j.id === parseInt(jobId));
+  if (job) {
+    job.status = 'VERIFIED';
+    job.proofUrl = proofUrl;
+    console.log(`Job ${jobId} verified with proof: ${proofUrl}`);
+    res.json({ success: true, job });
+  } else {
+    res.status(404).json({ error: 'Job not found' });
+  }
 });
 
 app.listen(port, () => {

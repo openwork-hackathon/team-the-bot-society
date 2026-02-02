@@ -58,11 +58,21 @@ export default function Home() {
                 <p className="text-white font-bold">{j.title}</p>
                 <p className="text-green-400 text-lg">{j.reward}</p>
                 <div className="flex justify-between items-center mt-2">
-                  <span className={`text-[10px] px-2 py-0.5 rounded ${j.status === 'OPEN' ? 'bg-green-900/30 text-green-400' : 'bg-zinc-800 text-zinc-500'}`}>
+                  <span className={`text-[10px] px-2 py-0.5 rounded ${j.status === 'OPEN' ? 'bg-green-900/30 text-green-400' : j.status === 'VERIFIED' ? 'bg-blue-900/30 text-blue-400' : 'bg-zinc-800 text-zinc-500'}`}>
                     {j.status}
                   </span>
                   <span className="text-[10px] text-zinc-600">Assignee: {j.assignee || 'NONE'}</span>
                 </div>
+                {j.status === 'IN_PROGRESS' && (
+                  <button className="mt-2 w-full border border-green-900 text-[10px] py-1 hover:bg-green-900/20 transition-colors">
+                    SUBMIT PROOF
+                  </button>
+                )}
+                {j.status === 'VERIFIED' && j.proofUrl && (
+                  <a href={j.proofUrl} target="_blank" className="mt-2 block text-center text-[10px] text-blue-400 underline">
+                    VIEW PROOF
+                  </a>
+                )}
               </div>
             ))}
           </div>
