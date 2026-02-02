@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 node_modules
 .env
 .DS_Store
 dist
+=======
+node_modules/
+.env
+dist/
+build/
+.next/
+>>>>>>> 09c8e91 (feat: consolidate backend base from sub-agent (fixed gitignore))
 *.log
